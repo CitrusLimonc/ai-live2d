@@ -1,8 +1,14 @@
 const path = require('path');
+const { app } = require('electron');
 const { LocalIndex } = require('vectra');
 
-const MEMORY_DIR = path.join(__dirname, '../../memory-store');
-const MODEL_CACHE_DIR = path.join(__dirname, '../../model-cache');
+const isDev = !app.isPackaged;
+const MEMORY_DIR = isDev
+    ? path.join(__dirname, '../../memory-store')
+    : path.join(app.getPath('userData'), 'memory-store');
+const MODEL_CACHE_DIR = isDev
+    ? path.join(__dirname, '../../model-cache')
+    : path.join(process.resourcesPath, 'model-cache');
 const MAX_RESULTS = 3;
 
 let extractor = null;
@@ -16,7 +22,8 @@ async function getExtractor() {
     env.allowRemoteModels = false;
     env.allowLocalModels = true;
     env.localModelPath = MODEL_CACHE_DIR + '/';
-    env.backends.onnx.wasm.proxy = false;
+    env.useBrowserCache = false;
+    env.useCustomCache = true;
 
     extractor = await pipeline('feature-extraction', 'all-MiniLM-L6-v2', {
         quantized: true,
