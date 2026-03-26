@@ -6,7 +6,8 @@
     "scripts": {
         "start": "electron .",
         "dev": "electron . --dev",
-        "build": "electron-builder --mac dmg"
+        "build": "env -u npm_config_electron_mirror -u NPM_CONFIG_ELECTRON_MIRROR ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron-builder-binaries/ electron-builder --mac dmg",
+        "build:upstream": "env -u npm_config_electron_mirror -u NPM_CONFIG_ELECTRON_MIRROR electron-builder --mac dmg"
     },
     "dependencies": {
         "@huggingface/transformers": "^3.8.1",

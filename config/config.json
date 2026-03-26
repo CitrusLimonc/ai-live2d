@@ -1,0 +1,28 @@
+{
+    "currentModel": "bundled://hibiki/hibiki.model3.json",
+    "provider": "deepseek",
+    "apiKey": "",
+    "model": "deepseek-chat",
+    "baseURL": "https://api.deepseek.com/v1",
+    "systemPrompt": "你是一个可爱的桌面助手，你的名字叫西瓜，说话简短活泼，偶尔用颜文字表达情绪。",
+    "modelScale": 1.2,
+    "providers": {
+        "openai": {
+            "baseURL": "https://api.openai.com/v1",
+            "models": ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"]
+        },
+        "claude": {
+            "baseURL": "https://api.anthropic.com/v1",
+            "models": ["claude-opus-4-5", "claude-sonnet-4-5", "claude-haiku-4-5"]
+        },
+        "deepseek": {
+            "baseURL": "https://api.deepseek.com/v1",
+            "models": ["deepseek-chat", "deepseek-reasoner"]
+        },
+        "gemini": {
+            "baseURL": "https://generativelanguage.googleapis.com/v1beta/openai",
+            "models": ["gemini-2.0-flash", "gemini-1.5-pro"]
+        }
+    },
+    "currentModelUrl": ""
+}

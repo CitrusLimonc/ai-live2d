@@ -26,9 +26,6 @@ pids
 *.seed
 *.pid.lock
 
-# User data (contains API keys and personal config)
-config/config.json
-
 # IDE
 .vscode/
 .idea/

@@ -171,3 +171,4 @@ newprovider: {
 -   [Live2D Cubism SDK](https://www.live2d.com/)
 -   [pixi-live2d-display](https://github.com/guansss/pixi-live2d-display)
 -   [Transformers.js](https://github.com/xenova/transformers.js)
+-   [all-MiniLM-L6-v2](https://huggingface.co/Xenova/all-MiniLM-L6-v2)
