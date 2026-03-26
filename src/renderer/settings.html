@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <title>设置</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                background: #f5f5f7;
+                color: #1d1d1f;
+            }
+
+            .tabs {
+                display: flex;
+                background: white;
+                border-bottom: 1px solid #e5e5ea;
+                padding: 0 16px;
+            }
+
+            .tab {
+                padding: 14px 20px;
+                font-size: 14px;
+                font-weight: 500;
+                color: #6e6e73;
+                cursor: pointer;
+                border-bottom: 2px solid transparent;
+                margin-bottom: -1px;
+            }
+
+            .tab.active {
+                color: #818cf8;
+                border-bottom-color: #818cf8;
+            }
+
+            .tab-content {
+                display: none;
+                padding: 20px;
+            }
+            .tab-content.active {
+                display: block;
+            }
+
+            .section {
+                background: white;
+                border-radius: 12px;
+                padding: 16px;
+                margin-bottom: 14px;
+                /* box-shadow: 0 1px 4px rgba(0,0,0,0.08); */
+            }
+
+            .section-title {
+                font-size: 11px;
+                font-weight: 600;
+                color: #6e6e73;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 12px;
+            }
+
+            .field {
+                margin-bottom: 12px;
+            }
+            .field:last-child {
+                margin-bottom: 0;
+            }
+
+            label {
+                display: block;
+                font-size: 13px;
+                color: #6e6e73;
+                margin-bottom: 4px;
+            }
+
+            select,
+            input,
+            textarea {
+                width: 100%;
+                padding: 8px 12px;
+                border: 1.5px solid #e5e5ea;
+                border-radius: 8px;
+                font-size: 14px;
+                color: #1d1d1f;
+                background: #fafafa;
+                outline: none;
+                transition: border-color 0.15s;
+            }
+
+            select:focus,
+            input:focus,
+            textarea:focus {
+                border-color: #818cf8;
+            }
+            textarea {
+                resize: vertical;
+                min-height: 72px;
+                font-family: inherit;
+            }
+
+            .model-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .model-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 14px;
+                background: #fafafa;
+                border: 1.5px solid #e5e5ea;
+                border-radius: 10px;
+                transition: border-color 0.15s;
+            }
+
+            .model-item.active-model {
+                border-color: #818cf8;
+                background: #f5f3ff;
+            }
+
+            .model-name {
+                font-size: 14px;
+                font-weight: 500;
+            }
+            .model-path {
+                font-size: 11px;
+                color: #6e6e73;
+                margin-top: 2px;
+                word-break: break-all;
+            }
+
+            .model-actions {
+                display: flex;
+                gap: 6px;
+                flex-shrink: 0;
+                margin-left: 10px;
+            }
+
+            .btn-small {
+                padding: 5px 12px;
+                border-radius: 6px;
+                border: none;
+                font-size: 12px;
+                cursor: pointer;
+                font-weight: 500;
+            }
+
+            .btn-use {
+                background: #818cf8;
+                color: white;
+            }
+            .btn-use:hover {
+                background: #6d7ae0;
+            }
+            .btn-use.current {
+                background: #34c759;
+                cursor: default;
+            }
+
+            .btn-delete {
+                background: #ff3b30;
+                color: white;
+            }
+            .btn-delete:hover {
+                background: #d93025;
+            }
+
+            .empty-state {
+                text-align: center;
+                padding: 32px;
+                color: #6e6e73;
+                font-size: 14px;
+            }
+
+            .btn-row {
+                display: flex;
+                gap: 10px;
+                justify-content: flex-end;
+                margin-top: 6px;
+            }
+
+            button {
+                padding: 9px 20px;
+                border-radius: 8px;
+                border: none;
+                font-size: 14px;
+                cursor: pointer;
+                font-weight: 500;
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #a78bfa, #818cf8);
+                color: white;
+                box-shadow: 0 2px 8px rgba(129, 140, 248, 0.35);
+            }
+
+            .btn-secondary {
+                background: #e5e5ea;
+                color: #1d1d1f;
+            }
+
+            .btn-import {
+                width: 100%;
+                padding: 10px;
+                border: 1.5px dashed #c7c7cc;
+                border-radius: 10px;
+                background: transparent;
+                color: #818cf8;
+                font-size: 14px;
+                cursor: pointer;
+                font-weight: 500;
+            }
+
+            .btn-import:hover {
+                border-color: #818cf8;
+                background: #f5f3ff;
+            }
+
+            #status {
+                font-size: 13px;
+                color: #34c759;
+                text-align: right;
+                height: 20px;
+                margin-top: 6px;
+            }
+
+            #model-status {
+                font-size: 13px;
+                color: #34c759;
+                text-align: center;
+                height: 18px;
+                margin: 8px 0 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('ai')">AI 设置</div>
+            <div class="tab" onclick="switchTab('model')">模型管理</div>
+        </div>
+
+        <div id="tab-ai" class="tab-content active">
+            <div class="section">
+                <div class="section-title">AI 服务商</div>
+                <div class="field">
+                    <label>服务商</label>
+                    <select id="provider">
+                        <option value="openai">OpenAI</option>
+                        <option value="claude">Claude (Anthropic)</option>
+                        <option value="deepseek">DeepSeek</option>
+                        <option value="gemini">Gemini</option>
+                        <option value="custom">自定义</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>模型</label>
+                    <input id="model" type="text" placeholder="e.g. gpt-4o-mini" />
+                </div>
+                <div class="field">
+                    <label>API Key</label>
+                    <input id="apiKey" type="password" placeholder="sk-..." />
+                </div>
+                <div class="field">
+                    <label>Base URL</label>
+                    <input id="baseURL" type="text" placeholder="https://api.openai.com/v1" />
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">角色设定</div>
+                <div class="field">
+                    <label>系统提示词</label>
+                    <textarea id="systemPrompt"></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">记忆管理</div>
+                <div class="field" style="display: flex; align-items: center; justify-content: space-between">
+                    <span style="font-size: 13px; color: #6e6e73">清空所有历史记忆（向量数据库）</span>
+                    <button class="btn-small" style="background: #ff3b30; color: white" onclick="clearMemory()">
+                        清空记忆
+                    </button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">模型显示</div>
+                <div class="field">
+                    <label>模型大小</label>
+                    <input
+                        type="range"
+                        id="modelScale"
+                        min="0.5"
+                        max="2.0"
+                        step="0.1"
+                        style="width: calc(100% - 80px); margin-right: 12px"
+                    />
+                    <span
+                        id="scaleValue"
+                        style="font-size: 13px; color: #6e6e73; min-width: 60px; display: inline-block"
+                        >1.0x</span
+                    >
+                </div>
+            </div>
+
+            <div id="status"></div>
+            <div class="btn-row">
+                <button class="btn-secondary" onclick="window.close()">取消</button>
+                <button class="btn-primary" onclick="saveSettings()">保存</button>
+            </div>
+        </div>
+
+        <div id="tab-model" class="tab-content">
+            <div class="section">
+                <div class="section-title">已安装模型</div>
+                <div id="model-list" class="model-list">
+                    <div class="empty-state">加载中...</div>
+                </div>
+                <div id="model-status"></div>
+            </div>
+
+            <button class="btn-import" onclick="importModel()">+ 导入新模型（选择 .model3.json 文件）</button>
+        </div>
+
+        <script>
+            const PROVIDERS = {
+                openai: { baseURL: 'https://api.openai.com/v1', models: ['gpt-4o', 'gpt-4o-mini', 'gpt-3.5-turbo'] },
+                claude: {
+                    baseURL: 'https://api.anthropic.com/v1',
+                    models: ['claude-opus-4-5', 'claude-sonnet-4-5', 'claude-haiku-4-5'],
+                },
+                deepseek: { baseURL: 'https://api.deepseek.com/v1', models: ['deepseek-chat', 'deepseek-reasoner'] },
+                gemini: {
+                    baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai',
+                    models: ['gemini-2.0-flash', 'gemini-1.5-pro'],
+                },
+            };
+
+            let config = {};
+
+            function switchTab(name) {
+                document.querySelectorAll('.tab').forEach((t, i) => {
+                    t.classList.toggle('active', ['ai', 'model'][i] === name);
+                });
+                document.querySelectorAll('.tab-content').forEach((c) => c.classList.remove('active'));
+                document.getElementById('tab-' + name).classList.add('active');
+                if (name === 'model') refreshModelList();
+            }
+
+            async function loadSettings() {
+                config = await window.api.getConfig();
+                document.getElementById('provider').value = config.provider || 'openai';
+                document.getElementById('model').value = config.model || '';
+                document.getElementById('apiKey').value = config.apiKey || '';
+                document.getElementById('baseURL').value = config.baseURL || '';
+                document.getElementById('systemPrompt').value = config.systemPrompt || '';
+
+                const scale = config.modelScale || 1.0;
+                document.getElementById('modelScale').value = scale;
+                document.getElementById('scaleValue').textContent = scale.toFixed(1) + 'x';
+            }
+
+            document.getElementById('provider').addEventListener('change', (e) => {
+                const p = PROVIDERS[e.target.value];
+                if (p) {
+                    document.getElementById('baseURL').value = p.baseURL;
+                    document.getElementById('model').value = p.models && p.models.length > 0 ? p.models[0] : '';
+                }
+            });
+
+            document.getElementById('modelScale').addEventListener('input', (e) => {
+                const value = parseFloat(e.target.value);
+                document.getElementById('scaleValue').textContent = value.toFixed(1) + 'x';
+            });
+
+            async function saveSettings() {
+                const updated = {
+                    ...config,
+                    provider: document.getElementById('provider').value,
+                    model: document.getElementById('model').value.trim(),
+                    apiKey: document.getElementById('apiKey').value.trim(),
+                    baseURL: document.getElementById('baseURL').value.trim(),
+                    systemPrompt: document.getElementById('systemPrompt').value.trim(),
+                    modelScale: parseFloat(document.getElementById('modelScale').value),
+                };
+                await window.api.saveConfig(updated);
+                config = updated;
+                const status = document.getElementById('status');
+                status.textContent = '已保存 ✓';
+                setTimeout(() => {
+                    status.textContent = '';
+                    window.close();
+                }, 1000);
+            }
+
+            async function refreshModelList() {
+                const models = await window.api.scanModels();
+                const list = document.getElementById('model-list');
+
+                if (!models.length) {
+                    list.innerHTML = '<div class="empty-state">暂无模型，请导入 .model3.json</div>';
+                    return;
+                }
+
+                list.innerHTML = models
+                    .map((m) => {
+                        const isCurrent = config.currentModel === m.path;
+                        const isUser = m.path.startsWith('user://');
+                        const safePath = m.path.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                        return `
+                            <div class="model-item ${isCurrent ? 'active-model' : ''}">
+                                <div>
+                                <div class="model-name">${m.name}</div>
+                                <div class="model-path">${isUser ? '用户导入' : '内置'}</div>
+                                </div>
+                                <div class="model-actions">
+                                <button class="btn-small btn-use ${isCurrent ? 'current' : ''}"
+                                    onclick="${isCurrent ? '' : `useModel('${safePath}')`}"
+                                >${isCurrent ? '使用中' : '切换'}</button>
+                                ${isUser ? `<button class="btn-small btn-delete" onclick="deleteModel('${safePath}')">删除</button>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    })
+                    .join('');
+            }
+
+            async function deleteModel(virtualPath) {
+                if (!confirm('确定要删除这个模型吗？')) return;
+                const result = await window.api.deleteModel(virtualPath);
+                if (result.error) {
+                    setModelStatus('❌ ' + result.error);
+                    return;
+                }
+                if (config.currentModel === virtualPath) config.currentModel = '';
+                setModelStatus('已删除 ✓');
+                refreshModelList();
+            }
+
+            async function useModel(modelPath) {
+                await window.api.switchModel(modelPath);
+                config.currentModel = modelPath;
+                setModelStatus('已切换 ✓');
+                refreshModelList();
+            }
+
+            async function importModel() {
+                const result = await window.api.importModel();
+                if (!result) return;
+                if (result.error) {
+                    setModelStatus('❌ ' + result.error);
+                    return;
+                }
+                setModelStatus(`已导入 "${result.name}" ✓`);
+                refreshModelList();
+            }
+
+            function setModelStatus(msg) {
+                const el = document.getElementById('model-status');
+                el.textContent = msg;
+                setTimeout(() => {
+                    el.textContent = '';
+                }, 3000);
+            }
+
+            async function clearMemory() {
+                await window.api.clearMemory();
+                const status = document.getElementById('status');
+                status.textContent = '记忆已清空 ✓';
+                setTimeout(() => {
+                    status.textContent = '';
+                }, 2000);
+            }
+
+            loadSettings();
+        </script>
+    </body>
+</html>
